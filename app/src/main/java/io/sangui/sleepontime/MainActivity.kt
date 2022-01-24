@@ -14,5 +14,13 @@ class MainActivity : Activity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        with(binding) {
+
+            timePickerFallAslep.setIs24HourView(true)
+
+            timePickerSleepCycleDuration.hour = 1
+            timePickerSleepCycleDuration.minute = 30
+            timePickerSleepCycleDuration.setIs24HourView(true)
+        }
     }
 }
