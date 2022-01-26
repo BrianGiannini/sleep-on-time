@@ -42,12 +42,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/how_long_fall_asleep_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.49"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/time_picker_get_up" />
 
-            <TimePicker
-                android:id="@+id/time_picker_fall_aslep"
+            <NumberPicker
+                android:id="@+id/number_picker_fall_aslep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -60,16 +59,35 @@
                 android:layout_height="wrap_content"
                 android:text="@string/length_cycle_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/time_picker_fall_aslep" />
+                app:layout_constraintTop_toBottomOf="@+id/number_picker_fall_aslep" />
 
-            <TimePicker
-                android:id="@+id/time_picker_sleep_cycle_duration"
+            <NumberPicker
+                android:id="@+id/number_picker_sleep_cycle_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fall_asleep_text2" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/minutes_text"
+                app:layout_constraintBottom_toBottomOf="@+id/number_picker_fall_aslep"
+                app:layout_constraintStart_toEndOf="@+id/number_picker_fall_aslep"
+                app:layout_constraintTop_toBottomOf="@+id/fall_asleep_text" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/minutes_text"
+                app:layout_constraintBottom_toBottomOf="@+id/number_picker_sleep_cycle_duration"
+                app:layout_constraintStart_toEndOf="@+id/number_picker_sleep_cycle_duration"
                 app:layout_constraintTop_toBottomOf="@+id/fall_asleep_text2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

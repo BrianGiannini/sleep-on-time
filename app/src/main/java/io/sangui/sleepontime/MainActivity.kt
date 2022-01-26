@@ -14,13 +14,18 @@ class MainActivity : Activity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupView()
+    }
+
+    private fun setupView() {
         with(binding) {
+            numberPickerFallAslep.minValue = 1
+            numberPickerFallAslep.maxValue = 60
+            numberPickerFallAslep.value = 10
 
-            timePickerFallAslep.setIs24HourView(true)
-
-            timePickerSleepCycleDuration.hour = 1
-            timePickerSleepCycleDuration.minute = 30
-            timePickerSleepCycleDuration.setIs24HourView(true)
+            numberPickerSleepCycleDuration.minValue = 10
+            numberPickerSleepCycleDuration.maxValue = 180
+            numberPickerSleepCycleDuration.value = 90
         }
     }
 }

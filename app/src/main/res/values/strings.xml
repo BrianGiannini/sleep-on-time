@@ -7,5 +7,6 @@
     <string name="when_get_up_text">When do you get up ?</string>
     <string name="how_long_fall_asleep_text">How long do you take to fall asleep ?</string>
     <string name="length_cycle_text">How long are your sleep cycle ?</string>
-    <string name="how_many_cycle_text">HJow many cycles you aim to sleep ?</string>
+    <string name="how_many_cycle_text">How many cycles you aim to sleep ?</string>
+    <string name="minutes_text">(minutes)</string>
 </resources>
