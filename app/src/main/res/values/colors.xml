@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">@android:color/white</color>
+    <color name="black50">#80000000</color>
+    <color name="razzmatazz">#D50C4D</color>
+    <color name="mountainMeadow">#19BA8B</color>
+    <color name="casablanca">#F6A340</color>
+
+</resources>
