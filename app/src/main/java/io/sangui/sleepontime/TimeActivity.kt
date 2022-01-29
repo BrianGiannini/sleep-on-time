@@ -8,8 +8,6 @@ import android.util.Log
 import com.google.gson.Gson
 import io.sangui.sleepontime.databinding.ActivityTimeBinding
 import java.util.*
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
 
 
 class TimeActivity : Activity() {
@@ -42,7 +40,6 @@ class TimeActivity : Activity() {
         val timeData: TimerData = gson.fromJson(jsonTimerObject, TimerData::class.java)
 
         calculateStuff(timeData)
-        setupView()
     }
 
     private fun goToParameterActivity() {
@@ -52,20 +49,31 @@ class TimeActivity : Activity() {
     }
 
     private fun calculateStuff(timeData: TimerData) {
+        val dayInMinutes = 1440
 
         val hourPicker = timeData.timeWakeUpHour
         val minutesPicker = timeData.timeWakeUpMinute
+        val totalChosenMinutes = hourPicker + (minutesPicker * 60)
 
         Log.d("DEBUGMAN", "hours $hourPicker minutes $minutesPicker")
 
-        val c: Calendar = Calendar.getInstance()
-        val hour: Int = c.get(Calendar.HOUR_OF_DAY)
-        val minute: Int = c.get(Calendar.MINUTE)
+        val calendar: Calendar = Calendar.getInstance()
+        val currentTimeHours = calendar.get(Calendar.HOUR_OF_DAY)
+        val currentTimeMinutes = calendar.get(Calendar.MINUTE)
+        val totalCurrentMinutes = currentTimeHours + (currentTimeMinutes * 60)
 
-        Log.d("DEBUGMAN", "current2 hours $hour current2 minutes $minute")
+        Log.d("DEBUGMAN", "current2 hours $currentTimeHours current2 minutes $currentTimeMinutes")
+
+        val currentTimesToMinutes = currentTimeHours * currentTimeMinutes
+        val timeMinutesWantSleep = timeData.cycleNumber * timeData.cycleLength
+
+        val timeAvailableToSleep = (totalCurrentMinutes + totalChosenMinutes).rem(dayInMinutes)
+
+        setupView()
 
     }
 
     private fun setupView() {
+        binding.colorBackgroundTime.resources.getColor(R.color.nope, applicationContext.theme)
     }
 }

@@ -4,12 +4,12 @@
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="when_get_up_text">When do you get up ?</string>
-    <string name="how_long_fall_asleep_text">How long do you take to fall asleep ?</string>
-    <string name="length_cycle_text">How long are your sleep cycle ?</string>
-    <string name="how_many_cycle_text">How many cycles you aim to sleep ?</string>
+    <string name="when_get_up_text">When do you get up?</string>
+    <string name="how_long_fall_asleep_text">How long do you take to go to sleep and fall asleep?</string>
+    <string name="length_cycle_text">How long are your sleep cycle?</string>
+    <string name="how_many_cycle_text">How many cycles you aim to sleep?</string>
     <string name="minutes_text">(minutes)</string>
-    <string name="how_many_sleep_cycles_do_you_want_to_sleep_ideally_text">How many sleep cycles do you want to sleep ideally ?</string>
+    <string name="how_many_sleep_cycles_do_you_want_to_sleep_ideally_text">How many sleep cycles do you want to sleep ideally?</string>
     <string name="confirm_text">Confirm</string>
 
     <string name="share_prefs">appSharedPrefs</string>
