@@ -11,4 +11,10 @@
     <string name="minutes_text">(minutes)</string>
     <string name="how_many_sleep_cycles_do_you_want_to_sleep_ideally_text">How many sleep cycles do you want to sleep ideally ?</string>
     <string name="confirm_text">Confirm</string>
+
+    <string name="share_prefs">appSharedPrefs</string>
+    <string name="share_prefs_timer_key">timerKey</string>
+    <string name="share_prefs_fist_time_key">firstTimeKey</string>
+    <string name="params_text">params</string>
+
 </resources>
