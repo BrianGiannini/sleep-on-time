@@ -8,6 +8,7 @@ import android.util.Log
 import com.google.gson.Gson
 import io.sangui.sleepontime.databinding.ActivityTimeBinding
 import java.util.*
+import kotlin.math.abs
 
 
 class TimeActivity : Activity() {
@@ -24,8 +25,6 @@ class TimeActivity : Activity() {
 
         val firstTime = preferences.getBoolean(getString(R.string.share_prefs_fist_time_key), true)
 
-        Log.d("DEBUGMAN", "firstTime $firstTime")
-
         if (firstTime) {
             goToParameterActivity()
         }
@@ -37,9 +36,11 @@ class TimeActivity : Activity() {
         val gson = Gson()
         val jsonTimerObject = preferences.getString(getString(R.string.share_prefs_timer_key), "")
 
-        val timeData: TimerData = gson.fromJson(jsonTimerObject, TimerData::class.java)
+        val timeData: TimerData? = gson.fromJson(jsonTimerObject, TimerData::class.java)
 
-        calculateStuff(timeData)
+        if (timeData != null) {
+            calculateStuff(timeData)
+        }
     }
 
     private fun goToParameterActivity() {
@@ -53,27 +54,62 @@ class TimeActivity : Activity() {
 
         val hourPicker = timeData.timeWakeUpHour
         val minutesPicker = timeData.timeWakeUpMinute
-        val totalChosenMinutes = hourPicker + (minutesPicker * 60)
+        val totalChosenMinutes = (hourPicker * 60) + minutesPicker
 
-        Log.d("DEBUGMAN", "hours $hourPicker minutes $minutesPicker")
+        Log.d("DEBUGMAN", "chosen wake up time hours $hourPicker minutes $minutesPicker")
 
         val calendar: Calendar = Calendar.getInstance()
         val currentTimeHours = calendar.get(Calendar.HOUR_OF_DAY)
         val currentTimeMinutes = calendar.get(Calendar.MINUTE)
-        val totalCurrentMinutes = currentTimeHours + (currentTimeMinutes * 60)
+        val totalCurrentMinutes = (currentTimeHours * 60) + currentTimeMinutes
 
-        Log.d("DEBUGMAN", "current2 hours $currentTimeHours current2 minutes $currentTimeMinutes")
+        Log.d("DEBUGMAN", "current time $currentTimeHours h $currentTimeMinutes mins")
 
-        val currentTimesToMinutes = currentTimeHours * currentTimeMinutes
         val timeMinutesWantSleep = timeData.cycleNumber * timeData.cycleLength
 
-        val timeAvailableToSleep = (totalCurrentMinutes + totalChosenMinutes).rem(dayInMinutes)
+        val timeAvailableToSleep = (totalCurrentMinutes + timeMinutesWantSleep).rem(dayInMinutes)
 
-        setupView()
+        val timeSurplus = totalChosenMinutes - timeAvailableToSleep
+        val timeSurplusReadable = minutesToHoursMinutes(timeSurplus)
 
+        Log.d("DEBUGMAN",  "time surplus ${timeSurplusReadable.first}h ${timeSurplusReadable.second} minutes")
+
+        val timeBeforeGoToBed = timeSurplus - timeData.timeToSleep
+        setupView(timeBeforeGoToBed, timeData.cycleLength)
     }
 
-    private fun setupView() {
-        binding.colorBackgroundTime.resources.getColor(R.color.nope, applicationContext.theme)
+    private fun minutesToHoursMinutes(totalMinutes: Int): Pair<Int, Int> {
+        val hours = totalMinutes.div(60)
+        val minutes = abs(totalMinutes).mod(60)
+        return Pair(hours, minutes)
+    }
+
+    private fun setupView(timeBeforeGoToBed: Int, cycleLength: Int) {
+        val timeBeforeGoToBedReadable = minutesToHoursMinutes(timeBeforeGoToBed)
+
+        val thresholdYes = (cycleLength * 0.1).toFloat()
+        val thresholdMeh = (cycleLength * 0.3).toFloat()
+
+        with(binding) {
+            if(timeBeforeGoToBed < 0) {
+                infoSleepText.text = "${abs(timeBeforeGoToBedReadable.first)}h ${timeBeforeGoToBedReadable.second} min late to go to bed"
+            } else {
+                infoSleepText.text = "${timeBeforeGoToBedReadable.first}h ${timeBeforeGoToBedReadable.second} min before go to bed"
+            }
+
+            val absTime = abs(timeBeforeGoToBed)
+
+            when {
+                absTime < thresholdYes -> {
+                    colorBackgroundTime.setBackgroundColor(getColor(R.color.yes_perfect))
+                }
+                absTime.toFloat() in thresholdYes..thresholdMeh -> {
+                    colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
+                }
+                else -> {
+                    colorBackgroundTime.setBackgroundColor(getColor(R.color.nope))
+                }
+            }
+        }
     }
 }
