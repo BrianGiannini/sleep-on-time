@@ -17,5 +17,7 @@
     <string name="share_prefs_fist_time_key">firstTimeKey</string>
     <string name="share_prefs_time_get_up">getUpKey</string>
     <string name="params_text">params</string>
+    <string name="late_text">late to go to bed</string>
+    <string name="before_bed_text">before go to bed</string>
 
 </resources>

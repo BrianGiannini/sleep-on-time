@@ -80,7 +80,7 @@ class ParameterActivity : Activity() {
             minutes = numberOfMinutes - (hours * 60)
         }
 
-        binding.numberMinutesInfo.text = "$hours h $minutes mins"
+        binding.numberMinutesInfo.text = "(${hours}h ${minutes}min)"
     }
 
     private fun saveStuff(preferences: SharedPreferences) {

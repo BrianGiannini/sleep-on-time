@@ -3,20 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:padding="8dp"
     android:id="@+id/color_background_time"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/info_sleep_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26sp"
+        app:layout_constraintBottom_toTopOf="@+id/params_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="number info" />
 
     <TextView
         android:id="@+id/info_sleep_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="info sleep here"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/info_sleep_number"
+        app:layout_constraintHorizontal_bias="0.636"
+        app:layout_constraintStart_toStartOf="@+id/info_sleep_number"
+        app:layout_constraintTop_toBottomOf="@+id/info_sleep_number"
+        tools:text="info sleep here" />
 
     <Button
         android:id="@+id/params_button"

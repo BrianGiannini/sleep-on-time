@@ -2,9 +2,9 @@
 <resources>
     <color name="white">@android:color/white</color>
     <color name="black50">#80000000</color>
-    <color name="nope">#D50C4D</color>
-    <color name="yes">#19BA8B</color>
-    <color name="yes_perfect">#03fc20</color>
-    <color name="meh">#F6A340</color>
+    <color name="nope">#690007</color>
+    <color name="normal">#162600</color>
+    <color name="yes_perfect">#007d1d</color>
+    <color name="meh">#876500</color>
 
 </resources>

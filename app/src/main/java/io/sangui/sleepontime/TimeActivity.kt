@@ -1,8 +1,10 @@
 package io.sangui.sleepontime
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import com.google.gson.Gson
@@ -14,6 +16,7 @@ import kotlin.math.abs
 class TimeActivity : Activity() {
 
     private lateinit var binding: ActivityTimeBinding
+    private lateinit var tickReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,15 +24,23 @@ class TimeActivity : Activity() {
         binding = ActivityTimeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
+        binding.paramsButton.setOnClickListener {
+            goToParameterActivity()
+        }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         val preferences = applicationContext.getSharedPreferences(getString(R.string.share_prefs), Context.MODE_PRIVATE)
 
         val firstTime = preferences.getBoolean(getString(R.string.share_prefs_fist_time_key), true)
 
         if (firstTime) {
-            goToParameterActivity()
-        }
-
-        binding.paramsButton.setOnClickListener {
             goToParameterActivity()
         }
 
@@ -41,12 +52,28 @@ class TimeActivity : Activity() {
         if (timeData != null) {
             calculateStuff(timeData)
         }
+
+        tickReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action?.compareTo(Intent.ACTION_TIME_TICK) == 0) {
+                    timeData?.let { calculateStuff(it) }
+                }
+            }
+        }
+        registerReceiver(tickReceiver, IntentFilter(Intent.ACTION_TIME_TICK))
+
     }
 
     private fun goToParameterActivity() {
         val i = Intent(applicationContext, ParameterActivity::class.java)
         startActivity(i)
         finish()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        unregisterReceiver(tickReceiver)
     }
 
     private fun calculateStuff(timeData: TimerData) {
@@ -85,16 +112,23 @@ class TimeActivity : Activity() {
     }
 
     private fun setupView(timeBeforeGoToBed: Int, cycleLength: Int) {
+
+        Log.d("DEBUGMAN",  "timeBeforeGoToBed $timeBeforeGoToBed ")
+
         val timeBeforeGoToBedReadable = minutesToHoursMinutes(timeBeforeGoToBed)
 
         val thresholdYes = (cycleLength * 0.1).toFloat()
         val thresholdMeh = (cycleLength * 0.3).toFloat()
+        val thresholdNope = (cycleLength * 0.5).toFloat()
+
 
         with(binding) {
             if(timeBeforeGoToBed < 0) {
-                infoSleepText.text = "${abs(timeBeforeGoToBedReadable.first)}h ${timeBeforeGoToBedReadable.second} min late to go to bed"
+                infoSleepNumber.text = "${abs(timeBeforeGoToBedReadable.first)}h ${timeBeforeGoToBedReadable.second} min"
+                infoSleepText.text = getString(R.string.late_text)
             } else {
-                infoSleepText.text = "${timeBeforeGoToBedReadable.first}h ${timeBeforeGoToBedReadable.second} min before go to bed"
+                infoSleepNumber.text = "${timeBeforeGoToBedReadable.first}h ${timeBeforeGoToBedReadable.second} min"
+                infoSleepText.text = getString(R.string.before_bed_text)
             }
 
             val absTime = abs(timeBeforeGoToBed)
@@ -106,8 +140,11 @@ class TimeActivity : Activity() {
                 absTime.toFloat() in thresholdYes..thresholdMeh -> {
                     colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
                 }
-                else -> {
+                absTime.toFloat() in thresholdMeh..thresholdNope -> {
                     colorBackgroundTime.setBackgroundColor(getColor(R.color.nope))
+                }
+                else -> {
+                    colorBackgroundTime.setBackgroundColor(getColor(R.color.normal))
                 }
             }
         }
