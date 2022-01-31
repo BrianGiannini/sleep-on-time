@@ -206,3 +206,5 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/androidstudio,kotlin,java,android
 .idea/misc.xml
+
+/keystore.properties

@@ -4,6 +4,18 @@ plugins {
 }
 
 android {
+    def propsFile = rootProject.file('keystore.properties')
+    def props = new Properties()
+    props.load(new FileInputStream(propsFile))
+
+    signingConfigs {
+        release {
+            storeFile = file(props['storeFile'])
+            storePassword = props['storePassword']
+            keyAlias = props['keyAlias']
+            keyPassword = props['keyPassword']
+        }
+    }
     compileSdk 31
 
     defaultConfig {
@@ -12,12 +24,15 @@ android {
         targetSdk 31
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.release
 
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
