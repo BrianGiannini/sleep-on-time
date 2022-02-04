@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import com.google.gson.Gson
 import io.sangui.sleepontime.databinding.ActivityTimeBinding
 import java.util.*
@@ -24,13 +23,9 @@ class TimeActivity : Activity() {
         binding = ActivityTimeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         binding.paramsButton.setOnClickListener {
             goToParameterActivity()
         }
-
-
     }
 
     override fun onResume() {
@@ -81,49 +76,48 @@ class TimeActivity : Activity() {
 
         val hourPicker = timeData.timeWakeUpHour
         val minutesPicker = timeData.timeWakeUpMinute
-        val totalChosenMinutes = (hourPicker * 60) + minutesPicker
-
-        Log.d("DEBUGMAN", "chosen wake up time hours $hourPicker minutes $minutesPicker")
+        val chosenWakeUpTimeRaw = (hourPicker * 60) + minutesPicker
 
         val calendar: Calendar = Calendar.getInstance()
         val currentTimeHours = calendar.get(Calendar.HOUR_OF_DAY)
         val currentTimeMinutes = calendar.get(Calendar.MINUTE)
-        val totalCurrentMinutes = (currentTimeHours * 60) + currentTimeMinutes
+        val currentTimeRaw = (currentTimeHours * 60) + currentTimeMinutes
 
-        Log.d("DEBUGMAN", "current time $currentTimeHours h $currentTimeMinutes mins")
+        val timeWantSleepRaw = timeData.numberOfCycles * timeData.cycleLength
 
-        val timeMinutesWantSleep = timeData.cycleNumber * timeData.cycleLength
+        if(currentTimeRaw + timeWantSleepRaw < dayInMinutes) {
+            if(currentTimeRaw + timeWantSleepRaw < chosenWakeUpTimeRaw){
+                binding.infoSleepNumber.text = chosenWakeUpTimeRaw - currentTimeRaw
+            } else{
 
-        val timeAvailableToSleep = (totalCurrentMinutes + timeMinutesWantSleep).rem(dayInMinutes)
+            }
+        } else {
 
-        val timeSurplus = totalChosenMinutes - timeAvailableToSleep
-        val timeSurplusReadable = minutesToHoursMinutes(timeSurplus)
+        }
 
-        Log.d("DEBUGMAN",  "time surplus ${timeSurplusReadable.first}h ${timeSurplusReadable.second} minutes")
+        val timeAvailableToSleep = (currentTimeRaw + timeWantSleepRaw).rem(dayInMinutes)
 
-        val timeBeforeGoToBed = timeSurplus - timeData.timeToSleep
-        setupView(timeBeforeGoToBed, timeData.cycleLength)
+        val timeLeftBeforeGoingToSleep = chosenWakeUpTimeRaw - timeAvailableToSleep
+
+//        val timeBeforeGoToBed = timeSurplus - timeData.timeToSleep
+//        setupView(timeLeftBeforeGoingToSleep, timeData.cycleLength, currentTimeRaw, chosenWakeUpTimeRaw)
     }
 
-    private fun minutesToHoursMinutes(totalMinutes: Int): Pair<Int, Int> {
+    private fun rawToReadableTime(totalMinutes: Int): Pair<Int, Int> {
         val hours = totalMinutes.div(60)
         val minutes = abs(totalMinutes).mod(60)
         return Pair(hours, minutes)
     }
 
-    private fun setupView(timeBeforeGoToBed: Int, cycleLength: Int) {
-
-        Log.d("DEBUGMAN",  "timeBeforeGoToBed $timeBeforeGoToBed ")
-
-        val timeBeforeGoToBedReadable = minutesToHoursMinutes(timeBeforeGoToBed)
+    private fun setupView(timeBeforeGoToBed: Int, cycleLength: Int, currentTime:Int, totalAlarmChosenMinutes: Int) {
+        val timeBeforeGoToBedReadable = rawToReadableTime(timeBeforeGoToBed)
 
         val thresholdYes = (cycleLength * 0.1).toFloat()
-        val thresholdMeh = (cycleLength * 0.3).toFloat()
-        val thresholdNope = (cycleLength * 0.5).toFloat()
-
+        val thresholdMeh = (cycleLength * 0.2).toFloat()
+        val thresholdNope = (cycleLength * 0.3).toFloat()
 
         with(binding) {
-            if(timeBeforeGoToBed < 0) {
+            if (timeBeforeGoToBed < 0 && currentTime < totalAlarmChosenMinutes) {
                 infoSleepNumber.text = "${abs(timeBeforeGoToBedReadable.first)}h ${timeBeforeGoToBedReadable.second} min"
                 infoSleepText.text = getString(R.string.late_text)
             } else {
@@ -133,18 +127,20 @@ class TimeActivity : Activity() {
 
             val absTime = abs(timeBeforeGoToBed)
 
+            val timeBeforeNextCycle = absTime.mod(cycleLength)
+
+                infoCycleText.text = getString(R.string.before_cycle_text)
+                infoCycleNumber.text = "$timeBeforeNextCycle min"
+
             when {
-                absTime < thresholdYes -> {
-                    colorBackgroundTime.setBackgroundColor(getColor(R.color.yes_perfect))
-                }
-                absTime.toFloat() in thresholdYes..thresholdMeh -> {
-                    colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
-                }
-                absTime.toFloat() in thresholdMeh..thresholdNope -> {
+                timeBeforeNextCycle > thresholdNope -> {
                     colorBackgroundTime.setBackgroundColor(getColor(R.color.nope))
                 }
-                else -> {
-                    colorBackgroundTime.setBackgroundColor(getColor(R.color.normal))
+                timeBeforeNextCycle > thresholdMeh -> {
+                    colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
+                }
+                timeBeforeNextCycle >= 0 -> {
+                    colorBackgroundTime.setBackgroundColor(getColor(R.color.yes_perfect))
                 }
             }
         }

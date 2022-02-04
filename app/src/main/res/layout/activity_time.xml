@@ -1,42 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="8dp"
     android:id="@+id/color_background_time"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/info_sleep_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="26sp"
-        app:layout_constraintBottom_toTopOf="@+id/params_button"
+        style="@android:style/TextAppearance.DeviceDefault.Large"
+        app:layout_constraintBottom_toTopOf="@+id/info_sleep_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:text="number info" />
+
+    <TextView
+        android:id="@+id/info_cycle_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        style="@android:style/TextAppearance.DeviceDefault.Large"
+        app:layout_constraintBottom_toTopOf="@+id/info_cycle_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        tools:text="cycle info" />
 
     <TextView
         android:id="@+id/info_sleep_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        style="@android:style/TextAppearance.DeviceDefault.Small"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="@+id/info_sleep_number"
-        app:layout_constraintHorizontal_bias="0.636"
         app:layout_constraintStart_toStartOf="@+id/info_sleep_number"
-        app:layout_constraintTop_toBottomOf="@+id/info_sleep_number"
         tools:text="info sleep here" />
 
-    <Button
-        android:id="@+id/params_button"
+    <TextView
+        android:id="@+id/info_cycle_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/before_cycle_text"
+        style="@android:style/TextAppearance.DeviceDefault.Small"
+        app:layout_constraintEnd_toEndOf="@+id/info_cycle_number"
+        app:layout_constraintStart_toStartOf="@+id/info_cycle_number"
+        app:layout_constraintTop_toBottomOf="@+id/info_cycle_number" />
+
+    <ImageButton
+        android:id="@+id/params_button"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/round_corner"
+        android:contentDescription="@string/parameters_text_description"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_baseline_settings_24"
         android:text="@string/params_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

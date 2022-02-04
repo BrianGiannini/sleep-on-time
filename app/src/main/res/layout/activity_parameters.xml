@@ -37,24 +37,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/when_sleep_text" />
 
-            <TextView
-                android:id="@+id/fall_asleep_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/how_long_fall_asleep_text"
-                android:gravity="center"
-                android:paddingTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/time_picker_get_up" />
+<!--            <TextView-->
+<!--                android:id="@+id/fall_asleep_text"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/how_long_fall_asleep_text"-->
+<!--                android:gravity="center"-->
+<!--                android:paddingTop="8dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/time_picker_get_up" />-->
 
-            <NumberPicker
-                android:id="@+id/number_picker_fall_aslep"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fall_asleep_text" />
+<!--            <NumberPicker-->
+<!--                android:id="@+id/number_picker_fall_aslep"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/fall_asleep_text" />-->
 
             <TextView
                 android:id="@+id/sleep_cycle_length"
@@ -65,7 +65,7 @@
                 android:paddingTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/number_picker_fall_aslep" />
+                app:layout_constraintTop_toBottomOf="@+id/time_picker_get_up" />
 
             <NumberPicker
                 android:id="@+id/number_picker_sleep_cycle_duration"
@@ -75,15 +75,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sleep_cycle_length" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/minutes_text"
-                app:layout_constraintBottom_toBottomOf="@+id/number_picker_fall_aslep"
-                app:layout_constraintStart_toEndOf="@+id/number_picker_fall_aslep"
-                app:layout_constraintTop_toBottomOf="@+id/fall_asleep_text" />
+<!--            <TextView-->
+<!--                android:id="@+id/textView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="8dp"-->
+<!--                android:text="@string/minutes_text"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/number_picker_fall_aslep"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/number_picker_fall_aslep"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/fall_asleep_text" />-->
 
             <TextView
                 android:id="@+id/minutes_info_text"

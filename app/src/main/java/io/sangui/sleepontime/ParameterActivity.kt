@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
 import com.google.gson.Gson
 import io.sangui.sleepontime.databinding.ActivityParametersBinding
 
@@ -12,7 +14,6 @@ import io.sangui.sleepontime.databinding.ActivityParametersBinding
 class ParameterActivity : Activity() {
 
     private lateinit var binding: ActivityParametersBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +26,19 @@ class ParameterActivity : Activity() {
         setupView(preferences)
     }
 
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        Log.d("DEBUGMAN", "onTouchEvent $event")
+
+        return super.onTouchEvent(event)
+    }
+
     private fun setupView(preferences: SharedPreferences) {
         with(binding) {
-            with(numberPickerFallAslep) {
-                minValue = 1
-                maxValue = 60
-                value = 10
-            }
+//            with(numberPickerFallAslep) {
+//                minValue = 1
+//                maxValue = 60
+//                value = 10
+//            }
 
             with(numberPickerSleepCycleDuration) {
                 minValue = 60
@@ -90,7 +97,8 @@ class ParameterActivity : Activity() {
                 timePickerGetUp.minute,
                 numberCycles.value,
                 numberPickerSleepCycleDuration.value,
-                numberPickerFallAslep.value
+                0
+//                numberPickerFallAslep.value
             )
         }
 

@@ -5,7 +5,7 @@
     values-round/strings.xml for round devices.
     -->
     <string name="when_get_up_text">When do you get up?</string>
-    <string name="how_long_fall_asleep_text">How long before going to bed and falling asleep?</string>
+    <string name="how_long_fall_asleep_text">How long before falling asleep?</string>
     <string name="length_cycle_text">How long are your sleep cycles?</string>
     <string name="how_many_cycle_text">How many cycles you aim to sleep?</string>
     <string name="minutes_text">min</string>
@@ -17,7 +17,10 @@
     <string name="share_prefs_fist_time_key">firstTimeKey</string>
     <string name="share_prefs_time_get_up">getUpKey</string>
     <string name="params_text">params</string>
-    <string name="late_text">late to go to bed</string>
-    <string name="before_bed_text">before go to bed</string>
+    <string name="late_text">late for sleep</string>
+    <string name="before_bed_text">before going to sleep</string>
+    <string name="before_cycle_text">before next cycle</string>
+    <string name="after_cycle_text">since previous cycle</string>
+    <string name="parameters_text_description">parameters</string>
 
 </resources>
