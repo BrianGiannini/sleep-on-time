@@ -14,6 +14,8 @@
 
     <string name="share_prefs">appSharedPrefs</string>
     <string name="share_prefs_timer_key">timerKey</string>
+    <string name="share_prefs_cycle_length_key">cycleLengthKey</string>
+    <string name="share_prefs_cycle_nbr_key">cycleNbrKey</string>
     <string name="share_prefs_fist_time_key">firstTimeKey</string>
     <string name="share_prefs_time_get_up">getUpKey</string>
     <string name="params_text">params</string>

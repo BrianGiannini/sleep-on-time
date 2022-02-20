@@ -1,1 +1,1 @@
-<a href="https://www.flaticon.com/free-icons/nightime" title="nightime icons">Nightime icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/sleep" title="sleep icons">Sleep icons created by Freepik - Flaticon</a>

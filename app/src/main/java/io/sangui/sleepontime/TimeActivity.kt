@@ -92,27 +92,52 @@ class TimeActivity : Activity() {
         // Know if next day
         val isNextDay = chosenEtaRaw < currentTimeRaw
 
-        var EtaWakeUp = if (!isNextDay) {
+        val etaWakeUp = if (!isNextDay) {
             chosenEtaRaw - currentTimeRaw
         } else {
             dayInMinutes - currentTimeRaw + chosenEtaRaw
         }
 
-        val readableEtaWake = rawToReadableTime(EtaWakeUp)
+        Log.d("DEBUGMAN", "alarm is next day: $isNextDay")
+
+        val readableEtaWake = rawToReadableTime(etaWakeUp)
         val readableEtaGoSleepRaw = rawToReadableTime(timeWantSleepRaw)
 
         Log.d("DEBUGMAN", "timeBeforeWakeUp: ${readableEtaWake.first}h${readableEtaWake.second}")
         Log.d("DEBUGMAN", "timeWantSleepRaw: ${readableEtaGoSleepRaw.first}h${readableEtaGoSleepRaw.second}")
 
-        val etaSleep = EtaWakeUp - timeWantSleepRaw
+        val etaSleep = etaWakeUp - timeWantSleepRaw
+
+        var isAfterCycle: Boolean
+        var etaNextCycle: Int
+
+        val isAfterSleep: Boolean = etaSleep < 0
 
         val absEtaSleep = abs(etaSleep)
         val cycleLength = timeData.cycleLength
-        val etaNextCycle = absEtaSleep.mod(cycleLength)
 
+        Log.d("DEBUGMAN", "absEtaSleep $absEtaSleep")
 
+//        if (absEtaSleep < cycleLength ) {
+//            etaNextCycle = absEtaSleep
+//            if (etaNextCycle > cycleLength.div(2)) {
+//                isAfterCycle = true
+//            } else {
+//                isAfterCycle = false
+//            }
+//        } else { // sup cycle
+            etaNextCycle = absEtaSleep.mod(cycleLength)
+            if (etaNextCycle < cycleLength.div(2)) {
+                isAfterCycle = false
+            }else {
+                isAfterCycle = true
+                etaNextCycle = etaNextCycle - cycleLength.div(2)
+            }
+//        }
 
-        setupView(etaSleep, cycleLength, currentTimeRaw, chosenEtaRaw, etaNextCycle)
+        Log.d("DEBUGMAN", "etaNextCycle: $etaNextCycle")
+
+        setupView(etaSleep, cycleLength, currentTimeRaw, chosenEtaRaw, etaNextCycle, isAfterCycle, isAfterSleep)
     }
 
     private fun rawToReadableTime(totalMinutes: Int): Pair<Int, Int> {
@@ -121,52 +146,65 @@ class TimeActivity : Activity() {
         return Pair(hours, minutes)
     }
 
-    private fun setupView(timeBeforeGoToBed: Int, cycleLength: Int, currentTime: Int, totalAlarmChosenMinutes: Int, etaNextCycle: Int) {
-        val timeBeforeGoToBedReadable = rawToReadableTime(timeBeforeGoToBed)
-
-        Log.d("DEBUGMAN", "etaNextCycle: $etaNextCycle")
+    private fun setupView(etaSleep: Int, cycleLength: Int, currentTime: Int, totalAlarmChosenMinutes: Int,
+                          etaNextCycle: Int, isAfterCycle: Boolean, isAfterSleep: Boolean) {
+        val timeBeforeGoToBedReadable = rawToReadableTime(etaSleep)
 
         with(binding) {
-            if (timeBeforeGoToBed < 0 && currentTime < totalAlarmChosenMinutes) {
-                infoSleepNumber.text = "${abs(timeBeforeGoToBedReadable.first)}h ${timeBeforeGoToBedReadable.second} min"
+            if (isAfterSleep) {
+                infoSleepNumber.text = "${abs(timeBeforeGoToBedReadable.first)} h ${timeBeforeGoToBedReadable.second} min"
                 infoSleepText.text = getString(R.string.late_text)
             } else {
-                infoSleepNumber.text = "${timeBeforeGoToBedReadable.first}h ${timeBeforeGoToBedReadable.second} min"
+                infoSleepNumber.text = "${timeBeforeGoToBedReadable.first} h ${timeBeforeGoToBedReadable.second} min"
                 infoSleepText.text = getString(R.string.before_bed_text)
             }
 
-            if (etaNextCycle < cycleLength.div(2)) {
-                displayColor(cycleLength, etaNextCycle)
+            if (isAfterCycle) {
                 infoCycleText.text = getString(R.string.after_cycle_text)
                 infoCycleNumber.text = "$etaNextCycle min"
             } else {
-                val displayCycle = cycleLength - etaNextCycle
-                displayColor(cycleLength, displayCycle)
                 infoCycleText.text = getString(R.string.before_cycle_text)
-                infoCycleNumber.text = "$displayCycle min"
+                infoCycleNumber.text = "$etaNextCycle min"
             }
 
+            displayColor(cycleLength, etaNextCycle, isAfterCycle)
 
         }
+
     }
 
-    private fun displayColor(cycleLength: Int, displayValue: Int) {
-        val thresholdYes = (cycleLength * 0.1).toFloat()
-        val thresholdMeh = (cycleLength * 0.2).toFloat()
-        val thresholdNope = (cycleLength * 0.3).toFloat()
+    private fun displayColor(cycleLength: Int, etaNextCycle: Int, isAfterCycle: Boolean) {
+        val threshold10 = (cycleLength * 0.1).toFloat()
+        val threshold20 = (cycleLength * 0.2).toFloat()
+        val threshold30 = (cycleLength * 0.3).toFloat()
 
         with(binding) {
-            when {
-                displayValue > thresholdNope -> {
-                    colorBackgroundTime.setBackgroundColor(getColor(R.color.nope))
+            if (isAfterCycle) {
+                when {
+                    etaNextCycle > threshold10 -> {
+                        colorBackgroundTime.setBackgroundColor(getColor(R.color.nope))
+                    }
+                    else -> {
+                        colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
+                    }
                 }
-                displayValue > thresholdMeh -> {
-                    colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
-                }
-                displayValue >= 0 -> {
-                    colorBackgroundTime.setBackgroundColor(getColor(R.color.yes_perfect))
+            } else {
+                when {
+                    etaNextCycle > threshold30 -> {
+                        colorBackgroundTime.setBackgroundColor(getColor(R.color.nope))
+                    }
+                    etaNextCycle > threshold20 -> {
+                        colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
+                    }
+                    etaNextCycle >= threshold10 -> {
+                        colorBackgroundTime.setBackgroundColor(getColor(R.color.yes_perfect))
+                    }
+                    etaNextCycle >= 0 -> {
+                        colorBackgroundTime.setBackgroundColor(getColor(R.color.meh))
+                    }
                 }
             }
+
         }
     }
 }

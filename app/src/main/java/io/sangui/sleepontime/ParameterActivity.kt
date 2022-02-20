@@ -1,17 +1,20 @@
 package io.sangui.sleepontime
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import androidx.wear.widget.SwipeDismissFrameLayout
 import com.google.gson.Gson
 import io.sangui.sleepontime.databinding.ActivityParametersBinding
 
 
-class ParameterActivity : Activity() {
+class ParameterActivity : Activity()/*, SwipeDismissFrameLayout.Callback()*/ {
 
     private lateinit var binding: ActivityParametersBinding
 
@@ -21,18 +24,22 @@ class ParameterActivity : Activity() {
         binding = ActivityParametersBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val mCallback: SwipeDismissFrameLayout.Callback = object : SwipeDismissFrameLayout.Callback() {
+            override fun onSwipeStarted(layout: SwipeDismissFrameLayout?) {
+                Log.d("DEBUGMAN", "SWIPE")
+                goToTimeActivity()
+            }
+        }
+
+        binding.swipeLayout.addCallback(mCallback)
+
         val preferences = applicationContext.getSharedPreferences(getString(R.string.share_prefs), Context.MODE_PRIVATE)
 
         setupView(preferences)
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        Log.d("DEBUGMAN", "onTouchEvent $event")
-
-        return super.onTouchEvent(event)
-    }
-
     private fun setupView(preferences: SharedPreferences) {
+
         with(binding) {
 //            with(numberPickerFallAslep) {
 //                minValue = 1
@@ -40,10 +47,10 @@ class ParameterActivity : Activity() {
 //                value = 10
 //            }
 
-            with(numberPickerSleepCycleDuration) {
+            with(cycleDuration) {
                 minValue = 60
                 maxValue = 110
-                value = 90
+                value = preferences.getInt(getString(R.string.share_prefs_cycle_length_key), 90)
                 setOnValueChangedListener { numberPicker, oldValue, newValue ->
                     timeWantSleep(numberCycles.value, newValue)
                 }
@@ -52,15 +59,16 @@ class ParameterActivity : Activity() {
             with(numberCycles) {
                 minValue = 1
                 maxValue = 24
-                value = 5
+                value = preferences.getInt(getString(R.string.share_prefs_cycle_nbr_key), 5)
                 setOnValueChangedListener { numberPicker, oldValue, newValue ->
-                    timeWantSleep(numberPickerSleepCycleDuration.value, newValue)
+                    timeWantSleep(cycleDuration.value, newValue)
                 }
             }
 
             confirmButton.setOnClickListener {
                 saveStuff(preferences)
             }
+
 
             val gson = Gson()
             val jsonTimerObject = preferences.getString(getString(R.string.share_prefs_timer_key), "")
@@ -74,7 +82,7 @@ class ParameterActivity : Activity() {
                 }
             }
 
-            timeWantSleep(numberPickerSleepCycleDuration.value, numberCycles.value)
+            timeWantSleep(cycleDuration.value, numberCycles.value)
         }
     }
 
@@ -96,7 +104,7 @@ class ParameterActivity : Activity() {
                 timePickerGetUp.hour,
                 timePickerGetUp.minute,
                 numberCycles.value,
-                numberPickerSleepCycleDuration.value,
+                cycleDuration.value,
                 0
 //                numberPickerFallAslep.value
             )
@@ -107,6 +115,8 @@ class ParameterActivity : Activity() {
 
         with(preferences) {
             edit().putString(getString(R.string.share_prefs_timer_key), jsonTimerData).apply()
+            edit().putInt(getString(R.string.share_prefs_cycle_nbr_key), binding.numberCycles.value).apply()
+            edit().putInt(getString(R.string.share_prefs_cycle_length_key), binding.cycleDuration.value).apply()
             edit().putLong(getString(R.string.share_prefs_time_get_up), binding.timePickerGetUp.drawingTime).apply()
             edit().putBoolean(getString(R.string.share_prefs_fist_time_key), false).apply()
         }
@@ -116,7 +126,8 @@ class ParameterActivity : Activity() {
 
     private fun goToTimeActivity() {
         val i = Intent(applicationContext, TimeActivity::class.java)
-        startActivity(i)
+        val leftAnimation = ActivityOptions.makeCustomAnimation(applicationContext, R.anim.anim_left_in, R.anim.anim_right_out).toBundle()
+        startActivity(i, leftAnimation)
         finish()
     }
 }
