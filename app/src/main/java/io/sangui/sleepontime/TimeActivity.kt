@@ -116,7 +116,7 @@ class TimeActivity : Activity() {
         val absEtaSleep = abs(etaSleep)
         val cycleLength = timeData.cycleLength
 
-        Log.d("DEBUGMAN", "absEtaSleep $absEtaSleep")
+
 
 //        if (absEtaSleep < cycleLength ) {
 //            etaNextCycle = absEtaSleep
@@ -126,16 +126,33 @@ class TimeActivity : Activity() {
 //                isAfterCycle = false
 //            }
 //        } else { // sup cycle
-            etaNextCycle = absEtaSleep.mod(cycleLength)
-            if (etaNextCycle < cycleLength.div(2)) {
-                isAfterCycle = false
-            }else {
-                isAfterCycle = true
-                etaNextCycle = etaNextCycle - cycleLength.div(2)
-            }
+        etaNextCycle = absEtaSleep.mod(cycleLength)
+
+        Log.d("DEBUGMAN", "EtaSleep $etaSleep")
+        Log.d("DEBUGMAN", "absEtaSleep $absEtaSleep")
+        Log.d("DEBUGMAN", "etaNextCycle BEFORE $etaNextCycle")
+
+        if (etaSleep < 0 && absEtaSleep < cycleLength.div(2)) {
+            Log.d("DEBUGMAN", "1")
+            isAfterCycle = true
+        } else if (etaSleep < 0 && absEtaSleep > cycleLength.div(2) && absEtaSleep < cycleLength) {
+            Log.d("DEBUGMAN", "1.1")
+            isAfterCycle = false
+            etaNextCycle = cycleLength - etaNextCycle
+        } else if (etaSleep > 0 && absEtaSleep < cycleLength.div(2)) {
+            Log.d("DEBUGMAN", "2")
+            isAfterCycle = false
+        } else if (etaNextCycle < cycleLength.div(2)) {
+            Log.d("DEBUGMAN", "3")
+            isAfterCycle = false
+        } else {
+            Log.d("DEBUGMAN", "4")
+            isAfterCycle = true
+            etaNextCycle = cycleLength - etaNextCycle
+        }
 //        }
 
-        Log.d("DEBUGMAN", "etaNextCycle: $etaNextCycle")
+        Log.d("DEBUGMAN", "CALCULATED: $etaNextCycle")
 
         setupView(etaSleep, cycleLength, currentTimeRaw, chosenEtaRaw, etaNextCycle, isAfterCycle, isAfterSleep)
     }
