@@ -14,7 +14,7 @@ import com.google.gson.Gson
 import io.sangui.sleepontime.databinding.ActivityParametersBinding
 
 
-class ParameterActivity : Activity()/*, SwipeDismissFrameLayout.Callback()*/ {
+class ParameterActivity : Activity(){
 
     private lateinit var binding: ActivityParametersBinding
 
@@ -41,11 +41,6 @@ class ParameterActivity : Activity()/*, SwipeDismissFrameLayout.Callback()*/ {
     private fun setupView(preferences: SharedPreferences) {
 
         with(binding) {
-//            with(numberPickerFallAslep) {
-//                minValue = 1
-//                maxValue = 60
-//                value = 10
-//            }
 
             with(cycleDuration) {
                 minValue = 60
@@ -106,7 +101,6 @@ class ParameterActivity : Activity()/*, SwipeDismissFrameLayout.Callback()*/ {
                 numberCycles.value,
                 cycleDuration.value,
                 0
-//                numberPickerFallAslep.value
             )
         }
 

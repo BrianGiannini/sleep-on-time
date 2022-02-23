@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import com.google.gson.Gson
 import io.sangui.sleepontime.databinding.ActivityTimeBinding
 import java.util.*
@@ -98,14 +97,6 @@ class TimeActivity : Activity() {
             dayInMinutes - currentTimeRaw + chosenEtaRaw
         }
 
-        Log.d("DEBUGMAN", "alarm is next day: $isNextDay")
-
-        val readableEtaWake = rawToReadableTime(etaWakeUp)
-        val readableEtaGoSleepRaw = rawToReadableTime(timeWantSleepRaw)
-
-        Log.d("DEBUGMAN", "timeBeforeWakeUp: ${readableEtaWake.first}h${readableEtaWake.second}")
-        Log.d("DEBUGMAN", "timeWantSleepRaw: ${readableEtaGoSleepRaw.first}h${readableEtaGoSleepRaw.second}")
-
         val etaSleep = etaWakeUp - timeWantSleepRaw
 
         val isAfterCycle: Boolean
@@ -118,30 +109,20 @@ class TimeActivity : Activity() {
 
         etaNextCycle = absEtaSleep.mod(cycleLength)
 
-        Log.d("DEBUGMAN", "EtaSleep $etaSleep")
-        Log.d("DEBUGMAN", "absEtaSleep $absEtaSleep")
-        Log.d("DEBUGMAN", "etaNextCycle BEFORE $etaNextCycle")
 
         if (etaSleep < 0 && absEtaSleep < cycleLength.div(2)) {
-            Log.d("DEBUGMAN", "1")
             isAfterCycle = true
         } else if (etaSleep < 0 && absEtaSleep > cycleLength.div(2) && absEtaSleep < cycleLength) {
-            Log.d("DEBUGMAN", "1.1")
             isAfterCycle = false
             etaNextCycle = cycleLength - etaNextCycle
         } else if (etaSleep > 0 && absEtaSleep < cycleLength.div(2)) {
-            Log.d("DEBUGMAN", "2")
             isAfterCycle = false
         } else if (etaNextCycle < cycleLength.div(2)) {
-            Log.d("DEBUGMAN", "3")
             isAfterCycle = false
         } else {
-            Log.d("DEBUGMAN", "4")
             isAfterCycle = true
             etaNextCycle = cycleLength - etaNextCycle
         }
-
-        Log.d("DEBUGMAN", "CALCULATED: $etaNextCycle")
 
         setupView(etaSleep, cycleLength, etaNextCycle, isAfterCycle, isAfterSleep)
     }
@@ -235,7 +216,6 @@ class TimeActivity : Activity() {
                 }
 
             }
-
         }
     }
 }
