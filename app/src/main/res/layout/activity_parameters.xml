@@ -9,7 +9,6 @@
     <androidx.wear.widget.BoxInsetLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/inner_frame_layout_padding"
         tools:context=".ParameterActivity"
         tools:deviceIds="wear">
 
