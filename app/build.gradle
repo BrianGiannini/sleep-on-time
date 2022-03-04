@@ -1,8 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -24,8 +22,8 @@ android {
         applicationId "io.sangui.sleepontime"
         minSdk 25
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "1.14"
         signingConfig signingConfigs.release
 
     }
@@ -44,9 +42,7 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'com.google.android.gms:play-services-wearable:17.1.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -55,12 +51,4 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.9'
-
-    // Firebase
-    implementation platform('com.google.firebase:firebase-bom:29.1.0')
-    // Analytics
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    // Crashlytics
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-
 }
