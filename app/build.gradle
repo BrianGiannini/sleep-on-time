@@ -22,8 +22,8 @@ android {
         applicationId "io.sangui.sleepontime"
         minSdk 25
         targetSdk 31
-        versionCode 5
-        versionName "1.14"
+        versionCode 7
+        versionName "1.16"
         signingConfig signingConfigs.release
 
     }
@@ -51,4 +51,7 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.9'
+
+    // UI size screen
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
 }

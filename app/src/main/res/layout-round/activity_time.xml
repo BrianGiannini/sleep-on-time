@@ -14,7 +14,6 @@
         app:layout_boxedEdges="all"
         tools:deviceIds="wear">
 
-
         <TextView
             android:id="@+id/info_sleep_number"
             style="@android:style/TextAppearance.DeviceDefault.Large"
