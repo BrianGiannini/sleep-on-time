@@ -1,31 +1,19 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    def propsFile = rootProject.file('keystore.properties')
-    def props = new Properties()
-    props.load(new FileInputStream(propsFile))
-
-    signingConfigs {
-        release {
-            storeFile = file(props['storeFile'])
-            storePassword = props['storePassword']
-            keyAlias = props['keyAlias']
-            keyPassword = props['keyPassword']
-        }
-    }
-    compileSdk 31
+    namespace = "io.sangui.sleepontime"
+    compileSdk = libs.versions.compileSdk.get().toInteger()
 
     defaultConfig {
         applicationId "io.sangui.sleepontime"
-        minSdk 25
-        targetSdk 31
-        versionCode 7
-        versionName "1.17"
-        signingConfig signingConfigs.release
-
+        minSdk = libs.versions.minSdk.get().toInteger()
+        targetSdk = libs.versions.targetSdk.get().toInteger()
+        versionCode = 8
+        versionName = "1.2"
     }
 
     buildTypes {
@@ -39,19 +27,35 @@ android {
     buildFeatures {
         viewBinding true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlin {
+        jvmToolchain(11)
+    }
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.wear:wear:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation libs.core.ktx
+    implementation libs.percentlayout
+    implementation libs.legacy.support.v4
+    implementation libs.recyclerview
+    implementation libs.wear
+    implementation libs.constraintlayout
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation libs.gson
 
     // UI size screen
-    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation libs.sdp.android
+
+    // Compose
+    implementation platform(libs.compose.bom)
+    implementation libs.ui
+    implementation libs.ui.graphics
+    implementation libs.ui.tooling.preview
+    implementation libs.material3
+    implementation libs.activity.compose
+    implementation libs.lifecycle.viewmodel.compose
 }
