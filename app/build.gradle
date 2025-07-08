@@ -26,6 +26,10 @@ android {
     }
     buildFeatures {
         viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -33,6 +37,9 @@ android {
     }
     kotlin {
         jvmToolchain(11)
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 }
 
@@ -42,7 +49,7 @@ dependencies {
     implementation libs.legacy.support.v4
     implementation libs.recyclerview
     implementation libs.wear
-    implementation libs.constraintlayout
+    implementation libs.constraintlayout.compose
 
     // Gson
     implementation libs.gson
@@ -52,10 +59,22 @@ dependencies {
 
     // Compose
     implementation platform(libs.compose.bom)
-    implementation libs.ui
-    implementation libs.ui.graphics
-    implementation libs.ui.tooling.preview
-    implementation libs.material3
-    implementation libs.activity.compose
-    implementation libs.lifecycle.viewmodel.compose
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+
+    // Wear OS specific Compose Material library (RECOMMENDED: Material 3 for Wear OS)
+    implementation libs.wear.compose.material3
+    implementation libs.wear.compose.foundation
+    implementation libs.wear.compose.navigation
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Koin
+    implementation libs.koin.android
+    implementation libs.koin.androidx.compose
+    implementation libs.datastore.preferences
+    implementation libs.datastore.core
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.navigation.compose
 }

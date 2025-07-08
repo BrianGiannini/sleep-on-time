@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Koin rules to prevent TimeViewModel from being stripped
+-keep class io.sangui.sleepontime.ui.TimeViewModel { *; }
+-keep class io.sangui.sleepontime.ui.ParameterViewModel { *; }
+-keep class io.sangui.sleepontime.data.DataStoreManager { *; }
+-keep class io.sangui.sleepontime.data.TimeManager { *; }
+-keep class io.sangui.sleepontime.di.AppModuleKt { *; }
