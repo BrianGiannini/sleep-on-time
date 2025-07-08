@@ -1,4 +1,4 @@
-package io.sangui.sleepontime.ui
+package io.sangui.sleepontime.ui.parameter
 
 class MockParameterViewModel : IParameterViewModel {
     override val selectedHour: Int = 7

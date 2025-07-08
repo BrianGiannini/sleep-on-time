@@ -1,4 +1,4 @@
-package io.sangui.sleepontime.ui
+package io.sangui.sleepontime.ui.parameter
 
 interface IParameterViewModel {
     val selectedHour: Int

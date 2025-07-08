@@ -1,4 +1,4 @@
-package io.sangui.sleepontime.ui
+package io.sangui.sleepontime.ui.time
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -15,7 +15,6 @@ import io.sangui.sleepontime.R
 import io.sangui.sleepontime.data.TimeManager
 import io.sangui.sleepontime.domain.TimerData
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
@@ -32,8 +31,6 @@ class TimeViewModel(
     override var backgroundColor by mutableStateOf(Color.White)
 
     private val _timerData = MutableStateFlow<TimerData?>(null)
-    val timerData: StateFlow<TimerData?> = _timerData
-
     private var tickReceiver: BroadcastReceiver
 
     init {

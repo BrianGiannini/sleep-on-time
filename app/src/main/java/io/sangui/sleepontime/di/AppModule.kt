@@ -3,8 +3,8 @@ package io.sangui.sleepontime.di
 import com.google.gson.Gson
 import io.sangui.sleepontime.data.DataStoreManager
 import io.sangui.sleepontime.data.TimeManager
-import io.sangui.sleepontime.ui.ParameterViewModel
-import io.sangui.sleepontime.ui.TimeViewModel
+import io.sangui.sleepontime.ui.parameter.ParameterViewModel
+import io.sangui.sleepontime.ui.time.TimeViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module

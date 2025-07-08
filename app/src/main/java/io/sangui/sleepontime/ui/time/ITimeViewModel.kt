@@ -1,4 +1,4 @@
-package io.sangui.sleepontime.ui
+package io.sangui.sleepontime.ui.time
 
 import androidx.compose.ui.graphics.Color
 import io.sangui.sleepontime.domain.TimerData

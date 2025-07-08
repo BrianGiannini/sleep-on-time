@@ -1,4 +1,4 @@
-package io.sangui.sleepontime.ui
+package io.sangui.sleepontime.ui.parameter
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf

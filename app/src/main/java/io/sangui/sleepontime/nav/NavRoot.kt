@@ -11,9 +11,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.sangui.sleepontime.data.DataStoreManager
-import io.sangui.sleepontime.ui.ParameterScreen
-import io.sangui.sleepontime.ui.TimeScreen
-import io.sangui.sleepontime.ui.TimeViewModel
+import io.sangui.sleepontime.ui.parameter.ParameterScreen
+import io.sangui.sleepontime.ui.time.TimeScreen
+import io.sangui.sleepontime.ui.time.TimeViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.java.KoinJavaComponent.inject
