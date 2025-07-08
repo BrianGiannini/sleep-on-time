@@ -18,10 +18,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.java.KoinJavaComponent.inject
 
-sealed class Screen(val route: String) {
-    object Time : Screen("time_screen")
-    object Parameter : Screen("parameter_screen")
-}
+
 
 @Composable
 fun NavRoot(navController: NavHostController) {

@@ -2,17 +2,13 @@ package io.sangui.sleepontime.ui.parameter
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Button
-import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Picker
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
@@ -28,33 +24,33 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.wear.compose.material3.Icon
+import io.sangui.sleepontime.nav.Screen
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun ParameterScreen(
     navController: NavHostController,
-    parameterViewModel: IParameterViewModel = koinViewModel<ParameterViewModel>()
+    parameterViewModel: IParameterViewModel = koinViewModel<ParameterViewModel>(),
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     val hours = (0..23).map { it.toString().padStart(2, '0') }
     val minutes = (0..59).map { it.toString().padStart(2, '0') }
 
-    val selectedHourIndex = remember { mutableIntStateOf(parameterViewModel.selectedHour) }
-    val selectedMinuteIndex = remember { mutableIntStateOf(parameterViewModel.selectedMinute) }
+    // Directly observe the ViewModel's State values
+    val selectedHourVm by parameterViewModel.selectedHour
+    val selectedMinuteVm by parameterViewModel.selectedMinute
+    val cycleLengthVm by parameterViewModel.cycleLength
+    val numberOfCyclesVm by parameterViewModel.numberOfCycles
+    val minutesInfoVm by parameterViewModel.minutesInfo
 
     val cycleLengthValues = (60..110).toList()
     val numberOfCyclesValues = (1..24).toList()
 
-    val selectedCycleLengthIndex = remember { mutableIntStateOf(cycleLengthValues.indexOf(parameterViewModel.cycleLength)) }
-    val selectedNumberOfCyclesIndex = remember { mutableIntStateOf(numberOfCyclesValues.indexOf(parameterViewModel.numberOfCycles)) }
-
-    // Determine screen shape for adaptive padding
     val configuration = LocalConfiguration.current
     val isScreenRound = configuration.isScreenRound
 
-    // Define vertical padding based on screen shape
     val verticalContentPadding = if (isScreenRound) 24.dp else 8.dp
     val horizontalContentPadding = 16.dp
 
@@ -83,17 +79,39 @@ fun ParameterScreen(
         ) {
             item {
                 Text(
-                    modifier = Modifier.padding(top = 32.dp), // Add top padding to ensure visibility on round screens
+                    modifier = Modifier.padding(top = 32.dp),
                     text = stringResource(id = R.string.when_get_up_text),
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
             item {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    val hourPickerState = rememberPickerState(initialNumberOfOptions = hours.size)
-                    LaunchedEffect(selectedHourIndex.intValue) {
-                        hourPickerState.scrollToOption(selectedHourIndex.intValue)
+                    // Hour Picker
+                    val hourPickerState = rememberPickerState(
+                        initialNumberOfOptions = hours.size,
+                    )
+
+                    // LaunchedEffect to scroll picker when selectedHourVm changes
+                    // This handles cases where the ViewModel updates after initial composition
+                    LaunchedEffect(selectedHourVm) {
+                        if (hourPickerState.selectedOption != selectedHourVm) {
+                            hourPickerState.scrollToOption(selectedHourVm)
+                        }
                     }
+
+                    // LaunchedEffect to observe picker changes and update ViewModel
+                    LaunchedEffect(hourPickerState) {
+                        snapshotFlow { hourPickerState.selectedOption }
+                            .distinctUntilChanged()
+                            .collect { newOptionIndex ->
+                                // Update ViewModel directly
+                                parameterViewModel.updateTime(
+                                    hours[newOptionIndex].toInt(),
+                                    selectedMinuteVm
+                                )
+                            }
+                    }
+
                     Picker(
                         state = hourPickerState,
                         contentDescription = "Select hour",
@@ -101,10 +119,7 @@ fun ParameterScreen(
                             .width(50.dp)
                             .height(75.dp),
                         readOnly = false,
-                        onSelected = {
-                            selectedHourIndex.intValue = hourPickerState.selectedOption
-                            parameterViewModel.updateTime(hours[hourPickerState.selectedOption].toInt(), minutes[selectedMinuteIndex.intValue].toInt())
-                        }
+                        onSelected = { /* Handled by snapshotFlow */ }
                     ) { optionIndex: Int ->
                         Text(
                             text = hours[optionIndex],
@@ -115,10 +130,31 @@ fun ParameterScreen(
                         text = ":",
                         style = MaterialTheme.typography.titleMedium,
                     )
-                    val minutePickerState = rememberPickerState(initialNumberOfOptions = minutes.size)
-                    LaunchedEffect(selectedMinuteIndex.intValue) {
-                        minutePickerState.scrollToOption(selectedMinuteIndex.intValue)
+                    // Minute Picker
+                    val minutePickerState = rememberPickerState(
+                        initialNumberOfOptions = minutes.size,
+                    )
+
+                    // LaunchedEffect to scroll picker when selectedMinuteVm changes
+                    LaunchedEffect(selectedMinuteVm) {
+                        if (minutePickerState.selectedOption != selectedMinuteVm) {
+                            minutePickerState.scrollToOption(selectedMinuteVm)
+                        }
                     }
+
+                    // LaunchedEffect to observe picker changes and update ViewModel
+                    LaunchedEffect(minutePickerState) {
+                        snapshotFlow { minutePickerState.selectedOption }
+                            .distinctUntilChanged()
+                            .collect { newOptionIndex ->
+                                // Update ViewModel directly
+                                parameterViewModel.updateTime(
+                                    selectedHourVm,
+                                    minutes[newOptionIndex].toInt()
+                                )
+                            }
+                    }
+
                     Picker(
                         state = minutePickerState,
                         contentDescription = "Select minute",
@@ -126,10 +162,7 @@ fun ParameterScreen(
                             .width(50.dp)
                             .height(100.dp),
                         readOnly = false,
-                        onSelected = {
-                            selectedMinuteIndex.intValue = minutePickerState.selectedOption
-                            parameterViewModel.updateTime(hours[selectedHourIndex.intValue].toInt(), minutes[minutePickerState.selectedOption].toInt())
-                        }
+                        onSelected = { /* Handled by snapshotFlow */ }
                     ) { optionIndex: Int ->
                         Text(
                             text = minutes[optionIndex],
@@ -139,8 +172,6 @@ fun ParameterScreen(
                 }
             }
 
-
-
             item {
                 Text(
                     text = stringResource(id = R.string.length_cycle_text),
@@ -148,10 +179,26 @@ fun ParameterScreen(
                 )
             }
             item {
-                val cycleLengthPickerState = rememberPickerState(initialNumberOfOptions = cycleLengthValues.size)
-                LaunchedEffect(selectedCycleLengthIndex.intValue) {
-                    cycleLengthPickerState.scrollToOption(selectedCycleLengthIndex.intValue)
+                val cycleLengthPickerState = rememberPickerState(
+                    initialNumberOfOptions = cycleLengthValues.size,
+                )
+
+                LaunchedEffect(cycleLengthVm) {
+                    val targetIndex = cycleLengthValues.indexOf(cycleLengthVm).coerceAtLeast(0)
+                    if (cycleLengthPickerState.selectedOption != targetIndex) {
+                        cycleLengthPickerState.scrollToOption(targetIndex)
+                    }
                 }
+
+                LaunchedEffect(cycleLengthPickerState) {
+                    snapshotFlow { cycleLengthPickerState.selectedOption }
+                        .distinctUntilChanged()
+                        .collect { newOptionIndex ->
+                            val newValue = cycleLengthValues[newOptionIndex]
+                            parameterViewModel.updateCycleLength(newValue)
+                        }
+                }
+
                 Picker(
                     state = cycleLengthPickerState,
                     contentDescription = "Select cycle length",
@@ -159,10 +206,7 @@ fun ParameterScreen(
                         .width(100.dp)
                         .height(75.dp),
                     readOnly = false,
-                    onSelected = {
-                        selectedCycleLengthIndex.intValue = cycleLengthPickerState.selectedOption
-                        parameterViewModel.updateCycleLength(cycleLengthValues[cycleLengthPickerState.selectedOption])
-                    }
+                    onSelected = { /* Handled by snapshotFlow */ }
                 ) { optionIndex: Int ->
                     Text(
                         text = cycleLengthValues[optionIndex].toString(),
@@ -181,9 +225,23 @@ fun ParameterScreen(
                 val numberOfCyclesPickerState = rememberPickerState(
                     initialNumberOfOptions = numberOfCyclesValues.size,
                 )
-                LaunchedEffect(selectedNumberOfCyclesIndex.intValue) {
-                    numberOfCyclesPickerState.scrollToOption(selectedNumberOfCyclesIndex.intValue)
+
+                LaunchedEffect(numberOfCyclesVm) {
+                    val targetIndex = numberOfCyclesValues.indexOf(numberOfCyclesVm).coerceAtLeast(0)
+                    if (numberOfCyclesPickerState.selectedOption != targetIndex) {
+                        numberOfCyclesPickerState.scrollToOption(targetIndex)
+                    }
                 }
+
+                LaunchedEffect(numberOfCyclesPickerState) {
+                    snapshotFlow { numberOfCyclesPickerState.selectedOption }
+                        .distinctUntilChanged()
+                        .collect { newOptionIndex ->
+                            val newValue = numberOfCyclesValues[newOptionIndex]
+                            parameterViewModel.updateNumberOfCycles(newValue)
+                        }
+                }
+
                 Picker(
                     state = numberOfCyclesPickerState,
                     contentDescription = "Select number of cycles",
@@ -191,10 +249,7 @@ fun ParameterScreen(
                         .width(100.dp)
                         .height(75.dp),
                     readOnly = false,
-                    onSelected = {
-                        selectedNumberOfCyclesIndex.intValue = numberOfCyclesPickerState.selectedOption
-                        parameterViewModel.updateNumberOfCycles(numberOfCyclesValues[numberOfCyclesPickerState.selectedOption])
-                    }
+                    onSelected = { /* Handled by snapshotFlow */ }
                 ) { optionIndex: Int ->
                     Text(
                         text = numberOfCyclesValues[optionIndex].toString(),
@@ -204,7 +259,7 @@ fun ParameterScreen(
             }
 
             item {
-                Text(text = parameterViewModel.minutesInfo)
+                Text(text = minutesInfoVm)
             }
 
             item {
@@ -214,33 +269,23 @@ fun ParameterScreen(
             item {
                 Button(onClick = {
                     coroutineScope.launch {
+                        // Use the current values from the ViewModel's state, which are kept up-to-date
                         parameterViewModel.saveStuff(
-                            hours[selectedHourIndex.intValue].toInt(),
-                            minutes[selectedMinuteIndex.intValue].toInt(),
-                            numberOfCyclesValues[selectedNumberOfCyclesIndex.intValue],
-                            cycleLengthValues[selectedCycleLengthIndex.intValue]
+                            selectedHourVm,
+                            selectedMinuteVm,
+                            numberOfCyclesVm,
+                            cycleLengthVm
                         )
-                        navController.popBackStack()
+                        navController.navigate(Screen.Time.route)
                     }
                 }) {
                     Icon(
                         imageVector = Icons.Filled.CheckCircle,
                         contentDescription = stringResource(id = R.string.parameters_text_description),
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                     )
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true, device = "id:wearos_small_round")
-@Preview(showBackground = true, device = "id:wearos_large_round")
-@Composable
-fun PreviewParameterScreen() {
-    ParameterScreen(
-        navController = rememberNavController(),
-        parameterViewModel = MockParameterViewModel(),
-    )
-
 }

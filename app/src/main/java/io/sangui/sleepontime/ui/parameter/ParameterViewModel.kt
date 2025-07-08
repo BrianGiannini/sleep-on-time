@@ -1,9 +1,9 @@
 package io.sangui.sleepontime.ui.parameter
 
-import androidx.compose.runtime.getValue
+// Import State with the same alias
+import androidx.compose.runtime.State as ComposeState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.sangui.sleepontime.data.DataStoreManager
@@ -14,47 +14,50 @@ class ParameterViewModel(
     private val dataStoreManager: DataStoreManager,
 ) : ViewModel(), IParameterViewModel {
 
-    override var selectedHour by mutableIntStateOf(0)
-    override var selectedMinute by mutableIntStateOf(0)
-    override var cycleLength by mutableIntStateOf(90)
-    override var numberOfCycles by mutableIntStateOf(5)
-    override var minutesInfo by mutableStateOf<String>("")
+    // Private MutableState for internal modification
+    private val _selectedHour = mutableIntStateOf(0)
+    private val _selectedMinute = mutableIntStateOf(0)
+    private val _cycleLength = mutableIntStateOf(90)
+    private val _numberOfCycles = mutableIntStateOf(5)
+
+    // Public, immutable State exposed to the UI using the alias
+    override val selectedHour: ComposeState<Int> = _selectedHour
+    override val selectedMinute: ComposeState<Int> = _selectedMinute
+    override val cycleLength: ComposeState<Int> = _cycleLength
+    override val numberOfCycles: ComposeState<Int> = _numberOfCycles
+
+    // This derived state will now automatically update and uses the alias for its type
+    override val minutesInfo: ComposeState<String> = derivedStateOf {
+        val numberOfMinutes = _cycleLength.intValue * _numberOfCycles.intValue
+        val hours = numberOfMinutes / 60
+        val minutes = numberOfMinutes % 60
+        "(${hours}h ${minutes.toString().padStart(2, '0')}min)"
+    }
 
     init {
         viewModelScope.launch {
-            val timeData = dataStoreManager.getTimerData()
-            selectedHour = timeData?.timeWakeUpHour ?: 0
-            selectedMinute = timeData?.timeWakeUpMinute ?: 0
-            cycleLength = dataStoreManager.getCycleLength()
-            numberOfCycles = dataStoreManager.getCycleNbr()
-            timeWantSleep()
+            val loadedCycleLength = dataStoreManager.getCycleLength()
+            val loadedNumberOfCycles = dataStoreManager.getCycleNbr()
+            val loadedTimerData = dataStoreManager.getTimerData()
+
+            _selectedHour.intValue = loadedTimerData?.timeWakeUpHour ?: 0
+            _selectedMinute.intValue = loadedTimerData?.timeWakeUpMinute ?: 0
+            _cycleLength.intValue = loadedCycleLength
+            _numberOfCycles.intValue = loadedNumberOfCycles
         }
     }
 
     override fun updateTime(hour: Int, minute: Int) {
-        selectedHour = hour
-        selectedMinute = minute
+        _selectedHour.intValue = hour
+        _selectedMinute.intValue = minute
     }
 
     override fun updateCycleLength(newVal: Int) {
-        cycleLength = newVal
-        timeWantSleep()
+        _cycleLength.intValue = newVal
     }
 
     override fun updateNumberOfCycles(newVal: Int) {
-        numberOfCycles = newVal
-        timeWantSleep()
-    }
-
-    fun timeWantSleep() {
-        val numberOfMinutes = cycleLength * numberOfCycles
-        var hours = 0
-        var minutes = 0
-        if (numberOfMinutes >= 60) {
-            hours = numberOfMinutes / 60
-            minutes = numberOfMinutes - (hours * 60)
-        }
-        minutesInfo = "(${hours}h ${minutes}min)"
+        _numberOfCycles.intValue = newVal
     }
 
     override suspend fun saveStuff(timeWakeUpHour: Int, timeWakeUpMinute: Int, numberOfCycles: Int, cycleLength: Int) {

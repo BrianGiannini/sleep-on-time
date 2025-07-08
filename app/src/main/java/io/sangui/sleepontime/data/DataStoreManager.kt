@@ -25,40 +25,46 @@ class DataStoreManager(private val context: Context, private val gson: Gson) {
     }
 
     suspend fun saveTimerData(timerData: TimerData) {
-        context.dataStore.edit { preferences ->
-            preferences[PreferencesKeys.TIMER_DATA] = gson.toJson(timerData)
-            preferences[PreferencesKeys.CYCLE_NBR] = timerData.numberOfCycles
-            preferences[PreferencesKeys.CYCLE_LENGTH] = timerData.cycleLength
-            preferences[PreferencesKeys.FIRST_TIME] = false
-        }
+        try {
+            context.dataStore.edit { preferences ->
+                preferences[PreferencesKeys.TIMER_DATA] = gson.toJson(timerData)
+                preferences[PreferencesKeys.CYCLE_NBR] = timerData.numberOfCycles
+                preferences[PreferencesKeys.CYCLE_LENGTH] = timerData.cycleLength
+                preferences[PreferencesKeys.FIRST_TIME] = false
+            }
+        } catch (e: Exception) { }
     }
 
     suspend fun getTimerData(): TimerData? {
         return context.dataStore.data.map { preferences ->
             val json = preferences[PreferencesKeys.TIMER_DATA]
-            if (json != null) {
+            val data = if (json != null) {
                 gson.fromJson(json, TimerData::class.java)
             } else {
                 null
             }
+            data
         }.first()
     }
 
     suspend fun getCycleNbr(): Int {
         return context.dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.CYCLE_NBR] ?: 5
+            val value = preferences[PreferencesKeys.CYCLE_NBR] ?: 5
+            value
         }.first()
     }
 
     suspend fun getCycleLength(): Int {
         return context.dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.CYCLE_LENGTH] ?: 90
+            val value = preferences[PreferencesKeys.CYCLE_LENGTH] ?: 90
+            value
         }.first()
     }
 
     suspend fun isFirstTime(): Boolean {
         return context.dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.FIRST_TIME] ?: true
+            val value = preferences[PreferencesKeys.FIRST_TIME] ?: true
+            value
         }.first()
     }
 }
