@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">最佳就寝时间</string>
+    <string name="when_get_up_text">你什么时候起床？</string>
+    <string name="how_long_fall_asleep_text">入睡前需要多长时间？</string>
+    <string name="length_cycle_text">你的睡眠周期有多长？</string>
+    <string name="how_many_cycle_text">你打算睡多少个周期？</string>
+    <string name="minutes_text">分钟</string>
+    <string name="how_many_sleep_cycles_do_you_want_to_sleep_ideally_text">你理想中想睡多少个睡眠周期？</string>
+    
+    <string name="params_text">参数</string>
+    <string name="late_text">睡觉迟了</string>
+    <string name="before_bed_text">睡觉前</string>
+    <string name="before_cycle_text">下一个周期前</string>
+    <string name="after_cycle_text">自上一个周期以来</string>
+</resources>

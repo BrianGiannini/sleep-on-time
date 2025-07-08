@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">最適な就寝時間</string>
+    <string name="when_get_up_text">いつ起きますか？</string>
+    <string name="how_long_fall_asleep_text">寝るまでどのくらいかかりますか？</string>
+    <string name="length_cycle_text">睡眠サイクルはどのくらいですか？</string>
+    <string name="how_many_cycle_text">何サイクル寝たいですか？</string>
+    <string name="minutes_text">分</string>
+    <string name="how_many_sleep_cycles_do_you_want_to_sleep_ideally_text">理想的には何サイクル寝たいですか？</string>
+    
+    <string name="params_text">パラメータ</string>
+    <string name="late_text">寝るのが遅い</string>
+    <string name="before_bed_text">寝る前に</string>
+    <string name="before_cycle_text">次のサイクルの前に</string>
+    <string name="after_cycle_text">前のサイクルから</string>
+</resources>

@@ -13,15 +13,15 @@ import io.sangui.sleepontime.domain.TimerData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.SHARE_PREFS)
 
 class DataStoreManager(private val context: Context, private val gson: Gson) {
 
     private object PreferencesKeys {
-        val TIMER_DATA = stringPreferencesKey("timer_data")
-        val CYCLE_NBR = intPreferencesKey("cycle_nbr")
-        val CYCLE_LENGTH = intPreferencesKey("cycle_length")
-        val FIRST_TIME = booleanPreferencesKey("first_time")
+        val TIMER_DATA = stringPreferencesKey(Constants.SHARE_PREFS_TIMER_KEY)
+        val CYCLE_NBR = intPreferencesKey(Constants.SHARE_PREFS_CYCLE_NBR_KEY)
+        val CYCLE_LENGTH = intPreferencesKey(Constants.SHARE_PREFS_CYCLE_LENGTH_KEY)
+        val FIRST_TIME = booleanPreferencesKey(Constants.SHARE_PREFS_FIRST_TIME_KEY)
     }
 
     suspend fun saveTimerData(timerData: TimerData) {

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Time to Bed</string>
+    <string name="when_get_up_text">Quand te lèves-tu ?</string>
+    <string name="how_long_fall_asleep_text">Combien de temps avant de t\'endormir ?</string>
+    <string name="length_cycle_text">Combien de temps durent tes cycles de sommeil ?</string>
+    <string name="how_many_cycle_text">Combien de cycles vises-tu ?</string>
+    <string name="minutes_text">min</string>
+    <string name="how_many_sleep_cycles_do_you_want_to_sleep_ideally_text">Combien de cycles de sommeil souhaites-tu idéalement ?</string>
+    
+    <string name="params_text">paramètres</string>
+    <string name="late_text">en retard pour dormir</string>
+    <string name="before_bed_text">avant d\'aller dormir</string>
+    <string name="before_cycle_text">avant le prochain cycle</string>
+    <string name="after_cycle_text">depuis le cycle précédent</string>
+</resources>

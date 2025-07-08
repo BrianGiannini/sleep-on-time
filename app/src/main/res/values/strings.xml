@@ -1,17 +1,12 @@
 <resources>
-    <string name="app_name">Sleep Cycle Timing</string>
+    <string name="app_name">Time to Bed</string>
     <string name="when_get_up_text">When do you get up?</string>
     <string name="how_long_fall_asleep_text">How long before falling asleep?</string>
     <string name="length_cycle_text">How long are your sleep cycles?</string>
     <string name="how_many_cycle_text">How many cycles you aim to sleep?</string>
     <string name="minutes_text">min</string>
     <string name="how_many_sleep_cycles_do_you_want_to_sleep_ideally_text">How many sleep cycles do you want to sleep ideally?</string>
-    <string name="share_prefs">appSharedPrefs</string>
-    <string name="share_prefs_timer_key">timerKey</string>
-    <string name="share_prefs_cycle_length_key">cycleLengthKey</string>
-    <string name="share_prefs_cycle_nbr_key">cycleNbrKey</string>
-    <string name="share_prefs_fist_time_key">firstTimeKey</string>
-    <string name="share_prefs_time_get_up">getUpKey</string>
+    
     <string name="params_text">params</string>
     <string name="late_text">late for sleep</string>
     <string name="before_bed_text">before going to sleep</string>
